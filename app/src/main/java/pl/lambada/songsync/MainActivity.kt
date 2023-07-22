@@ -52,6 +52,7 @@ import pl.lambada.songsync.ui.components.TopBar
 import pl.lambada.songsync.ui.components.dialogs.NoInternetDialog
 import pl.lambada.songsync.ui.screens.LoadingScreen
 import pl.lambada.songsync.ui.theme.SongSyncTheme
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.UnknownHostException
@@ -97,6 +98,13 @@ class MainActivity : ComponentActivity() {
                 context = context,
                 onDone = { hasLoadedPermissions = true }
             )
+
+            // Create our subdirectory in downloads if it doesn't exist
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val songSyncDir = File(downloadsDir, "SongSync")
+            if (!songSyncDir.exists()) {
+                songSyncDir.mkdir()
+            }
 
             SongSyncTheme {
                 // I'll cry if this crashes due to memory concerns

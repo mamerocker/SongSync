@@ -270,7 +270,7 @@ fun BrowseScreen(viewModel: MainViewModel) {
                                         "[ti:${result.songName}]\n" + "[ar:${result.artistName}]\n" + "[by:$generatedUsingString]\n" + lyrics
                                     val file = nextSong?.filePath?.toLrcFile() ?: File(
                                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                        "${result.songName} - ${result.artistName}.lrc"
+                                        "SongSync/${result.songName} - ${result.artistName}.lrc"
                                     )
                                     file.writeText(lrc)
 
@@ -331,7 +331,7 @@ fun BrowseScreen(viewModel: MainViewModel) {
 
                                             val file = File(
                                                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                                songFile.toString()
+                                                "SongSync/" + songFile.toString()
                                             )
                                             file.writeText(lrc)
 
