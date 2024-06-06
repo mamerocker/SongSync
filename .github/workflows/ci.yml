@@ -1,0 +1,52 @@
+name: Build signed release APK
+
+on:
+    push:
+        branches:
+            - '**'
+    pull_request:
+        branches:
+            - '**'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        env:
+            RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+            RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+            RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up JDK
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'zulu'
+                  java-version: '11'
+
+            - name: Prepare environment
+              run: |
+                  echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> local.properties
+                  echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> local.properties
+                  echo "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> local.properties
+                  echo ${{ secrets.KEYSTORE_BASE_64 }} | base64 --decode > keystore.jks
+                  echo "RELEASE_STORE_FILE=keystore.jks" >> local.properties
+
+            - name: Build release APK
+              run: ./gradlew bundleRelease
+
+            - name: Sign release APK
+              run: ./gradlew publishReleaseBundle
+
+            - name: Find release APK
+              run: |
+                  $APK_PATH=$(find . -name "*.apk")
+
+            - name: Upload release APK
+              uses: actions/upload-artifact@v2
+              with:
+                  name: app-release
+                  path: $APK_PATH
