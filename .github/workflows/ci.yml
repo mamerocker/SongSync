@@ -36,9 +36,6 @@ jobs:
             - name: Build release APK
               run: ./gradlew bundleRelease
 
-            - name: Sign release APK
-              run: ./gradlew publishReleaseBundle
-
             - name: Find release APK
               run: |
                   $APK_PATH=$(find . -name "*.apk")
