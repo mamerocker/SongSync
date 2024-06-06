@@ -16,6 +16,7 @@ jobs:
             RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
             RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
             RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+            KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
 
         steps:
             - name: Checkout code
@@ -29,7 +30,7 @@ jobs:
 
             - name: Set up signing key
               run: |
-                  echo ${{ secrets.KEYSTORE_BASE_64 }} | base64 --decode > release.keystore
+                  base64 -d <<< $KEYSTORE_BASE_64 > release.keystore
                   echo "RELEASE_STORE_FILE=release.keystore" >> $GITHUB_ENV
 
             - name: Build release APK
