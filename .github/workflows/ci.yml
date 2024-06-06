@@ -27,13 +27,10 @@ jobs:
                   distribution: 'zulu'
                   java-version: '11'
 
-            - name: Prepare environment
+            - name: Set up signing key
               run: |
-                  echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> local.properties
-                  echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> local.properties
-                  echo "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> local.properties
-                  echo ${{ secrets.KEYSTORE_BASE_64 }} | base64 --decode > keystore.jks
-                  echo "RELEASE_STORE_FILE=keystore.jks" >> local.properties
+                  echo ${{ secrets.KEYSTORE_BASE_64 }} | base64 --decode > release.keystore
+                  echo "RELEASE_STORE_FILE=release.keystore" >> $GITHUB_ENV
 
             - name: Build release APK
               run: ./gradlew bundleRelease
