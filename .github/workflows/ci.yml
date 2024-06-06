@@ -37,7 +37,9 @@ jobs:
               run: ./gradlew bundleRelease
 
             - name: Debug
-              run: ls -lR /home
+              run: |
+                  ls -lR .
+                  ls -lR /home/runner/work
 
             - name: Find release APK
               run: |
